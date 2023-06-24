@@ -1,20 +1,18 @@
 pipeline {
-    agent none
+    agent any
     stages {
-        stage('Back-end') {
+        stage('Build') {
             agent {
-                docker { image 'maven:3.9.0-eclipse-temurin-11' }
+                docker {
+                    image 'gradle:6.7-jdk11'
+                    // Run the container on the node specified at the
+                    // top-level of the Pipeline, in the same workspace,
+                    // rather than on a new node entirely:
+                    reuseNode true
+                }
             }
             steps {
-                sh 'mvn --version'
-            }
-        }
-        stage('Front-end') {
-            agent {
-                docker { image 'node:18.16.0-alpine' }
-            }
-            steps {
-                sh 'node --version'
+                sh 'gradle --version'
             }
         }
     }
